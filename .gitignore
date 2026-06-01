@@ -1,0 +1,16 @@
+# Файлы сборки и временные файлы компилятора
+build/
+bin/
+*.obj
+*.o
+*.exe
+*.dll
+*.a
+*.so
+debug/
+release/
+Makefile*
+
+# Файлы настроек среды разработки (Qt Creator)
+*.user
+*.pro.user*
