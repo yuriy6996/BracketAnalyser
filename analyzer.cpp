@@ -55,3 +55,30 @@ BracketCheckStatus checkBracketInStack(QStack<BracketPosition>& stack, QChar ch,
 
     return Mismatch;
 }
+
+void processLine(const QString& line, int lineIndex, ParserState& state, QStack<BracketPosition>& stack, QSet<ErrorMessage>& errors) {
+    for (int col = 0; col < line.length(); ++col) {
+        QChar ch = line[col];
+
+    }
+}
+
+void performLexicalAnalysis(const QStringList& codeLines, QSet<ErrorMessage>& errorSet) {
+    QStack<BracketPosition> stack;
+    ParserState state = Normal;
+
+    for (int i = 0; i < codeLines.size(); ++i) {
+        // Проверка на макрос (прерывание по ТЗ)
+        if (codeLines[i].contains("#define")) {
+            errorSet.insert(ErrorMessage(MacroFound, i, 0));
+            break;
+        }
+        processLine(codeLines[i], i, state, stack, errorSet);
+    }
+
+    // Очистка стека в конце файла
+    while (!stack.isEmpty()) {
+        BracketPosition p = stack.pop();
+        errorSet.insert(ErrorMessage(UnmatchedOpenBracket, p.line, p.column));
+    }
+}
