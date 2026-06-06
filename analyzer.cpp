@@ -41,3 +41,17 @@ void writeResultsToFile(QFile& outputFile, const QSet<ErrorMessage>& errorSet) {
 
     out << outputBuffer;
 }
+
+BracketCheckStatus checkBracketInStack(QStack<BracketPosition>& stack, QChar ch, BracketPosition& poppedPos) {
+    if (stack.isEmpty()) return StackEmpty;
+
+    poppedPos = stack.pop();
+
+    if ((ch == ')' && poppedPos.type == Round) ||
+        (ch == ']' && poppedPos.type == Square) ||
+        (ch == '}' && poppedPos.type == Curly)) {
+        return Match;
+    }
+
+    return Mismatch;
+}
