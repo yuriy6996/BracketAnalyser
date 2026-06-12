@@ -28,12 +28,16 @@ QStringList readCodeFromFile(QFile& inputFile, QSet<ErrorMessage>& errorSet) {
 void writeResultsToFile(QFile& outputFile, const QSet<ErrorMessage>& errorSet) {
     QTextStream out(&outputFile);
 
+    out.setCodec("UTF-8");
+
+    out.setGenerateByteOrderMark(true);
+
     if (errorSet.isEmpty()) {
-        out << "Ошибок не обнаружено\n";
+        out << QString::fromUtf8("Ошибок не обнаружено\n");
         return;
     }
 
-    QString outputBuffer = "Обнаружены ошибки:\n";
+    QString outputBuffer = QString::fromUtf8("Обнаружены ошибки:\n");
 
     for (const ErrorMessage& error : errorSet) {
         outputBuffer += error.generateText() + "\n";
