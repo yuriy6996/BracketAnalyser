@@ -188,20 +188,24 @@ void performLexicalAnalysis(const QStringList& codeLines, QSet<ErrorMessage>& er
 
     QStack<BracketPosition> stack;
     ParserState state = Normal;
+    bool macroAborted = false;
 
     for (int i = 0; i < codeLines.size(); ++i) {
         // Проверка на макрос #define
         if (codeLines[i].contains("#define")) {
             errorSet.insert(ErrorMessage(MacroFound, i, 0));
-            break;
+            macroAborted = true;
+            break; //
         }
         processLine(codeLines[i], i, state, stack, errorSet);
     }
 
-    // Если файл закончился, а в стеке что-то осталось — это незакрытые открывающие скобки
-    while (!stack.isEmpty()) {
-        BracketPosition p = stack.pop();
-        errorSet.insert(ErrorMessage(UnmatchedOpenBracket, p.line, p.column,
-            QString("(скобка '%1' не была закрыта до конца файла)").arg(p.character)));
+    // Проверяем незакрытые скобки
+    if (!macroAborted) {
+        while (!stack.isEmpty()) { // [cite: 50]
+            BracketPosition p = stack.pop(); // [cite: 50]
+            errorSet.insert(ErrorMessage(UnmatchedOpenBracket, p.line, p.column,
+                QString("(скобка '%1' не была закрыта до конца файла)").arg(p.character))); // [cite: 50]
+        }
     }
 }
