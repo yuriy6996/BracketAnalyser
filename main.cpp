@@ -2,10 +2,17 @@
 #include <QFile>
 #include <iostream>
 #include "analyzer.h"
+#include "testanalyzer.h"
 
 int main(int argc, char *argv[]) {
     // Инициализация консольного приложения Qt
     QCoreApplication a(argc, argv);
+
+    if (argc == 2 && QString(argv[1]) == "--test") {
+        TestAnalyzer tc;
+        return QTest::qExec(&tc);
+    }
+
 
     // 1. Проверка аргументов командной строки
     if (argc != 3) {
